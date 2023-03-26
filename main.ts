@@ -19,10 +19,6 @@ class MyStack extends TerraformStack {
         bucket: `backend-${project}`,
     });
 
-    const buildRunner = new google.serviceAccount.ServiceAccount(this, 'buildRunner', {
-        accountId: 'build-runner',
-    });
-
     new google.cloudbuildTrigger.CloudbuildTrigger(this, 'buildTrigger', {
         filename: 'cloudbuild.yaml',
         github: {
@@ -32,9 +28,13 @@ class MyStack extends TerraformStack {
                 branch: 'main',
             },
         },
-        serviceAccount: buildRunner.id,
     });
-    
+
+    new google.storageBucket.StorageBucket(this, 'sampleResource', {
+        location: region,
+        name: `sample-bucket-${project}`,
+    });
+
   }
 }
 
